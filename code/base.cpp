@@ -32,6 +32,7 @@ function v3 Hadamard(v3 a, v3 b){ return v3{a.x*b.x, a.y*b.y, a.z*b.z}; }
 #define Normalize(v) (v)*(1.f/Len(v))
 #define SetLen(v, len) len*Normalize(v)
 
+
 function v3 Cross(v3 a, v3 b){
 	return v3{
 		a.y*b.z - a.z*b.y,

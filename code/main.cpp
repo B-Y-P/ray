@@ -118,10 +118,8 @@ int main(){
 
 	Image stone_img  = LoadImage("texture.bmp");
 	Image wood_img   = LoadImage("wood.bmp");
-	Image sky_img    = LoadImage("skybox.bmp");
 	Image *stone = (stone_img.pixels ? &stone_img : 0);
 	Image *wood  = (wood_img.pixels  ? &wood_img  : 0);
-	Image *sky   = (sky_img.pixels   ? &sky_img   : 0);
 
 	v3 cl_cyan   = V3(0xFF00FFFF);
 	v3 cl_blue   = V3(0xFF0000FF);
@@ -135,7 +133,7 @@ int main(){
 
 	Material mats[] = {
 		// color      |  reflect  |  refract  | texture
-		{cl_sky,         0.f,        0.f,       sky},
+		{cl_sky},
 		{cl_ground},
 		{cl_cyan,        0.f,        1.58f},
 		{V3(0xFF5555FF), 0.4f,       0.f,       stone},
@@ -168,6 +166,13 @@ int main(){
 	scene.mat_count = ArrayCount(mats);
 	scene.light_count = ArrayCount(lights);
 	scene.sphere_count = ArrayCount(spheres);
+
+	scene.box[SKYBOX_RIGHT]  = LoadImage("sky_right.bmp");
+	scene.box[SKYBOX_LEFT]   = LoadImage("sky_left.bmp");
+	scene.box[SKYBOX_FRONT]  = LoadImage("sky_front.bmp");
+	scene.box[SKYBOX_BACK]   = LoadImage("sky_back.bmp");
+	scene.box[SKYBOX_TOP]    = LoadImage("sky_top.bmp");
+	scene.box[SKYBOX_BOTTOM] = LoadImage("sky_bottom.bmp");
 
 	///////////////////////////////////
 

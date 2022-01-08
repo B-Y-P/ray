@@ -30,8 +30,20 @@ struct Material{
 	Image *texture;
 };
 
+enum SKYBOX_PLANE{
+	SKYBOX_RIGHT,
+	SKYBOX_LEFT,
+	SKYBOX_FRONT,
+	SKYBOX_BACK,
+	SKYBOX_TOP,
+	SKYBOX_BOTTOM,
+	SKYBOX_COUNT,
+};
+
 struct Scene{
 	Plane ground;
+
+	Image box[SKYBOX_COUNT];
 
 	Material *mats;
 	Light    *lights;

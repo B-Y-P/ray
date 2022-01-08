@@ -46,6 +46,52 @@ function bool RayIntersectPlane(Ray ray, Plane plane, f32 *restrict t, v3 *restr
 	return RayIntersectPlane(ray, plane, t);
 }
 
+function v3 SkyboxTexture(Image *box, v3 dir){
+	Image *plane;
+	f32 u, v;
+
+	if(0){}
+	else if(dir.x > 0.f && Abs(dir.z) < dir.x && Abs(dir.y) < dir.x){
+		plane = box + SKYBOX_FRONT;
+		u = 0.5f*(dir.y/dir.x + 1.f);
+		v = 0.5f*(-dir.z/dir.x + 1.f);
+	}
+	else if(-dir.x > 0.f && Abs(dir.z) < -dir.x && Abs(dir.y) < -dir.x){
+		plane = box + SKYBOX_BACK;
+		u = 0.5f*(-dir.y/-dir.x + 1.f);
+		v = 0.5f*(-dir.z/-dir.x + 1.f);
+	}
+
+	else if(dir.z > 0.f && Abs(dir.x) < dir.z && Abs(dir.y) < dir.z){
+		plane = box + SKYBOX_TOP;
+		u = 0.5f*(dir.y/dir.z + 1.f);
+		v = 0.5f*(dir.x/dir.z + 1.f);
+	}
+	else if(-dir.z > 0.f && Abs(dir.x) < -dir.z && Abs(dir.y) < -dir.z){
+		plane = box + SKYBOX_BOTTOM;
+		u = 0.5f*(dir.x/-dir.z + 1.f);
+		v = 0.5f*(dir.y/-dir.z + 1.f);
+	}
+
+	else if(dir.y > 0.f && Abs(dir.x) < dir.y && Abs(dir.z) < dir.y){
+		plane = box + SKYBOX_RIGHT;
+		u = 0.5f*(-dir.x/dir.y + 1.f);
+		v = 0.5f*(-dir.z/dir.y + 1.f);
+	}
+	else if(-dir.y > 0.f && Abs(dir.x) < -dir.y && Abs(dir.z) < -dir.y){
+		plane = box + SKYBOX_LEFT;
+		u = 0.5f*(dir.x/-dir.y + 1.f);
+		v = 0.5f*(-dir.z/-dir.y + 1.f);
+	}
+	else{ return {}; }
+
+	u = ClampN(u);
+	v = ClampN(v);
+	u32 index = u32(plane->wid*u32(plane->hit*v) + plane->wid*u);
+
+	return V3(plane->pixels[index]);
+}
+
 
 function v3 RayCast(Ray ray,
 					f32       *restrict t,
@@ -81,7 +127,10 @@ function v3 RayCast(Ray ray,
 
 	Material mat = scene->mats[mat_slot];
 
-	if(mat_slot == 0){ return mat.color; }
+	if(mat_slot == 0){
+		return SkyboxTexture(scene->box, ray.dir);
+		return mat.color;
+	}
 
 	*t = min_len;
 	v3 color = {};
@@ -125,7 +174,8 @@ function v3 RayCast(Ray ray,
 			v3 shadow_offset = {};
 #else
 			v3 shadow_offset = {RandBiNorm(rng), RandBiNorm(rng), RandBiNorm(rng)};
-			shadow_offset = Normalize(shadow_offset)*light_rad*SqRt(RandNorm(rng));
+			shadow_offset = Normalize(shadow_offset);
+			shadow_offset *= light_rad*SqRt(RandNorm(rng));
 #endif
 
 			v3 shadow_dir = light->pos + shadow_offset - hit_pos;
@@ -161,7 +211,6 @@ function v3 RayCast(Ray ray,
 			color += l_color;
 		}
 
-		lights:;
 	}
 
 	if(depth > 0){
