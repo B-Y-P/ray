@@ -46,7 +46,7 @@ function bool RenderTile(Thread_Queue *queue){
 	v3 cam_dir = V3(1.f, 0.f, -0.2f);
 	cam_dir = Normalize(cam_dir);
 	v3 cam_up = AXIS_Z;
-	v3 cam_x = Cross(cam_dir, cam_up);
+	v3 cam_x = Cross(cam_up, cam_dir);
 
 
 	f32 tan_theta = Tan(FOV*TAU32/360.f);

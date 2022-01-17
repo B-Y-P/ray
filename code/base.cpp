@@ -36,7 +36,7 @@ function v3 Hadamard(v3 a, v3 b){ return v3{a.x*b.x, a.y*b.y, a.z*b.z}; }
 function v3 Cross(v3 a, v3 b){
 	return v3{
 		a.y*b.z - a.z*b.y,
-		a.x*b.z - a.z*b.x,
+		a.z*b.x - a.x*b.z,
 		a.x*b.y - a.y*b.x,
 	};
 }
