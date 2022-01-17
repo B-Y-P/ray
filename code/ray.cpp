@@ -69,8 +69,8 @@ function v3 SkyboxTexture(Image *box, v3 dir){
 	}
 	else if(-dir.z > 0.f && Abs(dir.x) < -dir.z && Abs(dir.y) < -dir.z){
 		plane = box + SKYBOX_BOTTOM;
-		u = 0.5f*(dir.x/-dir.z + 1.f);
-		v = 0.5f*(dir.y/-dir.z + 1.f);
+        u = 0.5*(+dir.y/-dir.z + 1.0);
+        v = 0.5*(-dir.x/-dir.z + 1.0);
 	}
 
 	else if(dir.y > 0.f && Abs(dir.x) < dir.y && Abs(dir.z) < dir.y){
